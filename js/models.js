@@ -66,7 +66,7 @@ class StoryList {
 
   /** Adds story data to API, makes a Story instance, adds it to story list.
    * - user - the current instance of User who will post the story
-   * - obj of {title, author, url}
+   * - obj of {author, title, url}
    *
    * Returns the new Story instance
    */
