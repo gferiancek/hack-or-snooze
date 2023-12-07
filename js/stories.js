@@ -84,3 +84,18 @@ function putStoriesOnPage() {
 
   $allStoriesList.show();
 }
+
+/** Get list of own stories from currentUser, generates their HTML, and puts on page. */
+
+function putOwnStoriesOnPage() {
+  $ownStoriesList.empty();
+
+  // Loop through own stories and generate HTML for them.
+  console.log(currentUser, currentUser.ownStories);
+  for (let story of currentUser.ownStories) {
+    const $story = generateStoryMarkup(story);
+    $ownStoriesList.append($story);
+  }
+
+  $ownStoriesList.slideUp().show();
+}

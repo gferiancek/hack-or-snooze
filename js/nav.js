@@ -39,6 +39,17 @@ function navSubmitClick(evt) {
 
 $navSubmit.on('click', navSubmitClick);
 
+/** Show ownStoriesList on click of "my stories" */
+
+function navOwnStoriesClick(evt) {
+  console.debug('navOwnStoriesClick', evt);
+
+  hidePageComponents();
+  putOwnStoriesOnPage();
+}
+
+$navOwnStories.on('click', navOwnStoriesClick);
+
 /** When a user first logins in, update the navbar to reflect that. */
 
 function updateNavOnLogin() {
