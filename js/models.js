@@ -66,13 +66,28 @@ class StoryList {
 
   /** Adds story data to API, makes a Story instance, adds it to story list.
    * - user - the current instance of User who will post the story
-   * - obj of {title, author, url}
+   * - obj of {author, title, url}
    *
    * Returns the new Story instance
    */
 
-  async addStory(/* user, newStory */) {
-    // UNIMPLEMENTED: complete this function!
+  async addStory(user, { author, title, url }) {
+    try {
+      const response = await axios({
+        url: `${BASE_URL}/stories`,
+        method: 'POST',
+        data: { token: user.loginToken, story: { author, title, url } },
+      });
+
+      // Get story data from Response and update our data.
+      const story = new Story(response.data.story);
+      this.stories.unshift(story);
+      currentUser.ownStories.unshift(story);
+
+      return new ApiResponse(story);
+    } catch (e) {
+      return ApiResponse.parse(e);
+    }
   }
 }
 

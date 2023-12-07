@@ -5,6 +5,8 @@ let $currentError;
 /**
  * Utility function that takes a jQuery object and an error, generates an
  * errorComponent from the error and then prepends it to the jQuery object.
+ *  - $element - jQuery Object to append the Error to.
+ *  - error - Error that occured during Axios API Call.
  */
 function prependError($element, error) {
   // If an error already exists, remove it
@@ -14,12 +16,14 @@ function prependError($element, error) {
 
   const $error = generateErrorComponent(error.message);
   $currentError = $error;
-  $element.prepend($error)
+  $element.prepend($error);
 }
 
 /**
- * All individual componets show the same alert-error and just use a different
- * message. Generates the jQuery object for them to display in their own component.
+ * Utility function to create an alert-error jQuery Object.
+ *  - message - Message to be displayed inside the alert.
+ *
+ * Returns jQuery object of class alert-error.
  */
 
 function generateErrorComponent(message) {
@@ -27,13 +31,13 @@ function generateErrorComponent(message) {
     <div class="alert-error">
     <i class="fas fa-exclamation-circle"></i>${message}
     </div>
-  `)
+  `);
 }
 
 /**
  * Removes currentError from the screen and resets it back to undefined.
  */
 function removeCurrentError() {
-    $currentError.remove();
-    $currentError = undefined;
+  $currentError.remove();
+  $currentError = undefined;
 }

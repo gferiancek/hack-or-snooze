@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 // This is the global list of the stories, an instance of StoryList
 let storyList;
@@ -35,10 +35,44 @@ function generateStoryMarkup(story) {
     `);
 }
 
+/** Grabs form data from $submitForm, creates new story, and displays API Response. */
+
+async function onSubmitStory(evt) {
+  evt.preventDefault();
+
+  const author = $('#author-name').val();
+  const title = $('#story-title').val();
+  const url = $('#story-url').val();
+
+  const response = await storyList.addStory(currentUser, {
+    author,
+    title,
+    url,
+  });
+
+  if (response.error) {
+    prependError($submitForm, response.error);
+  }
+
+  if (response.data) {
+    // Create and prepend jQuery Story object.
+    const $story = generateStoryMarkup(response.data);
+    $allStoriesList.prepend($story);
+
+    // Reset form and slide off screen.
+    $submitForm.trigger('reset');
+    $submitForm.slideUp(function () {
+      $(this).hide();
+    });
+  }
+}
+
+$submitForm.on('submit', onSubmitStory);
+
 /** Gets list of stories from server, generates their HTML, and puts on page. */
 
 function putStoriesOnPage() {
-  console.debug("putStoriesOnPage");
+  console.debug('putStoriesOnPage');
 
   $allStoriesList.empty();
 
@@ -49,4 +83,19 @@ function putStoriesOnPage() {
   }
 
   $allStoriesList.show();
+}
+
+/** Get list of own stories from currentUser, generates their HTML, and puts on page. */
+
+function putOwnStoriesOnPage() {
+  $ownStoriesList.empty();
+
+  // Loop through own stories and generate HTML for them.
+  console.log(currentUser, currentUser.ownStories);
+  for (let story of currentUser.ownStories) {
+    const $story = generateStoryMarkup(story);
+    $ownStoriesList.append($story);
+  }
+
+  $ownStoriesList.slideUp().show();
 }
