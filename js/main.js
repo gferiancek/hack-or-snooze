@@ -26,6 +26,12 @@ function hidePageComponents() {
     $signupForm,
   ];
   components.forEach(c => c.hide());
+  
+  // hidePageComponents is used on page switch,
+  // so errors shouldn't persist.
+  if ($currentError) {
+    removeCurrentError();
+  }
 }
 
 /** Overall function to kick off the app. */

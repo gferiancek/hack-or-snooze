@@ -1,13 +1,12 @@
-"use strict";
+'use strict';
 
-const BASE_URL = "https://hack-or-snooze-v3.herokuapp.com";
+const BASE_URL = 'https://hack-or-snooze-v3.herokuapp.com';
 
 /******************************************************************************
  * Story: a single story in the system
  */
 
 class Story {
-
   /** Make instance of Story from data object about story:
    *   - {title, author, url, username, storyId, createdAt}
    */
@@ -25,10 +24,9 @@ class Story {
 
   getHostName() {
     // UNIMPLEMENTED: complete this function!
-    return "hostname.com";
+    return 'hostname.com';
   }
 }
-
 
 /******************************************************************************
  * List of Story instances: used by UI to show story lists in DOM.
@@ -56,11 +54,11 @@ class StoryList {
     // query the /stories endpoint (no auth required)
     const response = await axios({
       url: `${BASE_URL}/stories`,
-      method: "GET",
+      method: 'GET',
     });
 
     // turn plain old story objects from API into instances of Story class
-    const stories = response.data.stories.map(story => new Story(story));
+    const stories = response.data.stories.map((story) => new Story(story));
 
     // build an instance of our own class using the new array of stories
     return new StoryList(stories);
@@ -73,11 +71,10 @@ class StoryList {
    * Returns the new Story instance
    */
 
-  async addStory( /* user, newStory */) {
+  async addStory(/* user, newStory */) {
     // UNIMPLEMENTED: complete this function!
   }
 }
-
 
 /******************************************************************************
  * User: a user in the system (only used to represent the current user)
@@ -89,21 +86,17 @@ class User {
    *   - token
    */
 
-  constructor({
-                username,
-                name,
-                createdAt,
-                favorites = [],
-                ownStories = []
-              },
-              token) {
+  constructor(
+    { username, name, createdAt, favorites = [], ownStories = [] },
+    token
+  ) {
     this.username = username;
     this.name = name;
     this.createdAt = createdAt;
 
     // instantiate Story instances for the user's favorites and ownStories
-    this.favorites = favorites.map(s => new Story(s));
-    this.ownStories = ownStories.map(s => new Story(s));
+    this.favorites = favorites.map((s) => new Story(s));
+    this.ownStories = ownStories.map((s) => new Story(s));
 
     // store the login token on the user so it's easy to find for API calls.
     this.loginToken = token;
@@ -117,24 +110,30 @@ class User {
    */
 
   static async signup(username, password, name) {
-    const response = await axios({
-      url: `${BASE_URL}/signup`,
-      method: "POST",
-      data: { user: { username, password, name } },
-    });
+    try {
+      const response = await axios({
+        url: `${BASE_URL}/signup`,
+        method: 'POST',
+        data: { user: { username, password, name } },
+      });
 
-    let { user } = response.data
+      let { user } = response.data;
 
-    return new User(
-      {
-        username: user.username,
-        name: user.name,
-        createdAt: user.createdAt,
-        favorites: user.favorites,
-        ownStories: user.stories
-      },
-      response.data.token
-    );
+      return new ApiResponse(
+        new User(
+          {
+            username: user.username,
+            name: user.name,
+            createdAt: user.createdAt,
+            favorites: user.favorites,
+            ownStories: user.stories,
+          },
+          response.data.token
+        )
+      );
+    } catch (e) {
+      return ApiResponse.parse(e);
+    }
   }
 
   /** Login in user with API, make User instance & return it.
@@ -144,24 +143,30 @@ class User {
    */
 
   static async login(username, password) {
-    const response = await axios({
-      url: `${BASE_URL}/login`,
-      method: "POST",
-      data: { user: { username, password } },
-    });
+    try {
+      const response = await axios({
+        url: `${BASE_URL}/login`,
+        method: 'POST',
+        data: { user: { username, password } },
+      });
 
-    let { user } = response.data;
+      let { user } = response.data;
 
-    return new User(
-      {
-        username: user.username,
-        name: user.name,
-        createdAt: user.createdAt,
-        favorites: user.favorites,
-        ownStories: user.stories
-      },
-      response.data.token
-    );
+      return new ApiResponse(
+        new User(
+          {
+            username: user.username,
+            name: user.name,
+            createdAt: user.createdAt,
+            favorites: user.favorites,
+            ownStories: user.stories,
+          },
+          response.data.token
+        )
+      );
+    } catch (e) {
+      return ApiResponse.parse(e);
+    }
   }
 
   /** When we already have credentials (token & username) for a user,
@@ -172,7 +177,7 @@ class User {
     try {
       const response = await axios({
         url: `${BASE_URL}/users/${username}`,
-        method: "GET",
+        method: 'GET',
         params: { token },
       });
 
@@ -184,13 +189,31 @@ class User {
           name: user.name,
           createdAt: user.createdAt,
           favorites: user.favorites,
-          ownStories: user.stories
+          ownStories: user.stories,
         },
         token
       );
     } catch (err) {
-      console.error("loginViaStoredCredentials failed", err);
+      console.error('loginViaStoredCredentials failed', err);
       return null;
     }
+  }
+}
+
+/**************************************************************************************
+ * ApiResponse: Wrapper class that is returned to UI layer, containing data or error.
+ */
+class ApiResponse {
+  constructor(data, error = null) {
+    this.data = data;
+    this.error = error;
+  }
+
+  static parse(e) {
+    if (!e.isAxiosError) {
+      // Unknown Error. Rethrowing to avoid masking issue.
+      throw e;
+    }
+    return new ApiResponse(null, e.response.data.error);
   }
 }
