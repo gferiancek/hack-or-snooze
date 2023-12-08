@@ -93,7 +93,7 @@ class StoryList {
   /**
    * Removes story from API, and updates our own data to reflect the changes.
    *  - storyId - Id for story to be deleted.
-   * 
+   *
    * Returns ApiResponse(), where data = deleted storyId.
    */
 
@@ -105,10 +105,19 @@ class StoryList {
         data: { token: currentUser.loginToken },
       });
 
-      // Get storyId of deleted story from Response and update our data.
+      // Get storyId of deleted story from Response and update StoryList data
       const deletedId = response.data.story.storyId;
-      this.stories.filter(({ storyId }) => storyId !== deletedId);
-      currentUser.ownStories.filter(({ storyId }) => storyId !== deletedId);
+      this.stories = this.stories.filter(
+        ({ storyId }) => storyId !== deletedId
+      );
+
+      // Update User data
+      currentUser.ownStories = currentUser.ownStories.filter(
+        ({ storyId }) => storyId !== deletedId
+      );
+      currentUser.favorites = currentUser.favorites.filter(
+        ({ storyId }) => storyId !== deletedId
+      );
 
       return new ApiResponse(deletedId);
     } catch (e) {
@@ -300,6 +309,12 @@ class User {
 
   isFavorite(story) {
     return this.favorites.some(({ storyId }) => storyId === story.storyId);
+  }
+
+  /** Utility function to indicate whether or not a given story was created by the User */
+
+  isOwn(story) {
+    return this.ownStories.some(({ storyId }) => storyId === story.storyId);
   }
 }
 

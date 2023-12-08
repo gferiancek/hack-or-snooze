@@ -46,11 +46,14 @@ function putStoriesOnPage() {
 function generateStoryMarkup(story) {
   // console.debug("generateStoryMarkup", story);
 
-  const starIcon = currentUser ? getFavoriteIcon(currentUser, story) : '';
+  const favoriteIcon = currentUser ? getFavoriteIcon(currentUser, story) : '';
+  const deleteIcon = currentUser ? getDeleteIcon(currentUser, story) : '';
   const hostName = story.getHostName();
+
   return $(`
       <li id="${story.storyId}">
-        ${starIcon}
+        ${deleteIcon}
+        ${favoriteIcon}
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
         </a>
@@ -62,13 +65,23 @@ function generateStoryMarkup(story) {
 }
 
 /** Gets the proper star icon to match whether or not the story is favorited */
+
 function getFavoriteIcon(user, story) {
   const starType = user.isFavorite(story) ? 'fas' : 'far';
   return `<i class="${starType} fa-star"></i>`;
 }
 
+/** Gets the trash can icon to be used for deleting stories. If story doesn't belong
+ * to the user, it returns an empty string instead.
+ */
+
+function getDeleteIcon(user, story) {
+  const showDeleteIcon = user.isOwn(story);
+  return showDeleteIcon ? `<i class="fas fa-trash-alt"></i>` : '';
+}
+
 /************************************************************************************
- * Creating and Rendering user created Stories.
+ * Creating, Rendering, and deleting user created Stories.
  */
 
 /** Grabs form data from $submitForm, creates new story, and displays API Response. */
@@ -105,6 +118,26 @@ async function onSubmitStory(evt) {
 
 $submitForm.on('submit', onSubmitStory);
 
+/** Gets storyId from parent LI, deletes the story, and removes it from the DOM. */
+
+async function onDeleteStory(evt) {
+  const $parent = $(evt.target.closest('li'));
+
+  const response = await storyList.deleteStory($parent.attr('id'));
+
+  if (response.error) {
+    prependError($storiesContainer, response.error);
+  }
+
+  if (response.data) {
+    $parent.slideUp(function () {
+      $(this).remove;
+    });
+  }
+}
+
+$storiesContainer.on('click', '.fa-trash-alt', onDeleteStory);
+
 /** Get list of own stories from currentUser, generates their HTML, and puts on page. */
 
 function putOwnStoriesOnPage() {
@@ -124,7 +157,7 @@ function putOwnStoriesOnPage() {
  */
 
 /** Gets story for the <li> the favoriteIcon belongs to and toggles its favorite status */
-async function toggleFavorite(evt) {
+async function onToggleFavorite(evt) {
   // Grabs storyId from parent <li> and finds corresponding story.
   const storyId = evt.target.closest('li').id;
   const story = storyList.stories.find((story) => story.storyId === storyId);
@@ -149,7 +182,7 @@ async function toggleFavorite(evt) {
   }
 }
 
-$storiesContainer.on('click', '.fa-star', toggleFavorite);
+$storiesContainer.on('click', '.fa-star', onToggleFavorite);
 
 /**Get list of fav stories from currentUser, generates their html, and puts on page */
 
