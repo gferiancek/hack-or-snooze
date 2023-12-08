@@ -50,6 +50,17 @@ function navOwnStoriesClick(evt) {
 
 $navOwnStories.on('click', navOwnStoriesClick);
 
+/** Show favStoriesList on click of 'favorites' */
+
+function navFavoritesClick(evt) {
+  console.debug('navFavoritesClick', evt);
+
+  hidePageComponents();
+  putFavoriteStoriesOnPage();
+}
+
+$navFavorites.on('click', navFavoritesClick);
+
 /** When a user first logins in, update the navbar to reflect that. */
 
 function updateNavOnLogin() {

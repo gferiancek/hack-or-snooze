@@ -111,20 +111,19 @@ function putOwnStoriesOnPage() {
   $ownStoriesList.empty();
 
   // Loop through own stories and generate HTML for them.
-  console.log(currentUser, currentUser.ownStories);
   for (let story of currentUser.ownStories) {
     const $story = generateStoryMarkup(story);
     $ownStoriesList.append($story);
   }
 
-  $ownStoriesList.slideUp().show();
+  $ownStoriesList.show();
 }
 
 /**************************************************************************************
  * Updating and displaying User Favorites
  */
 
-/** */
+/** Gets story for the <li> the favoriteIcon belongs to and toggles its favorite status */
 async function toggleFavorite(evt) {
   // Grabs storyId from parent <li> and finds corresponding story.
   const storyId = evt.target.closest('li').id;
@@ -150,4 +149,17 @@ async function toggleFavorite(evt) {
   }
 }
 
-$allStoriesList.on('click', '.fa-star', toggleFavorite);
+$storiesContainer.on('click', '.fa-star', toggleFavorite);
+
+/**Get list of fav stories from currentUser, generates their html, and puts on page */
+
+function putFavoriteStoriesOnPage() {
+  $favStoriesList.empty();
+
+  for (let story of currentUser.favorites) {
+    const $story = generateStoryMarkup(story);
+    $favStoriesList.append($story);
+  }
+
+  $favStoriesList.show();
+}
