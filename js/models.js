@@ -68,7 +68,7 @@ class StoryList {
    * - user - the current instance of User who will post the story
    * - obj of {author, title, url}
    *
-   * Returns the new Story instance
+   * Returns the ApiResponse().
    */
 
   async addStory(user, { author, title, url }) {
@@ -122,6 +122,8 @@ class User {
    * - username: a new username
    * - password: a new password
    * - name: the user's full name
+   * 
+   * Returns ApiResponse()
    */
 
   static async signup(username, password, name) {
@@ -155,6 +157,8 @@ class User {
 
    * - username: an existing user's username
    * - password: an existing user's password
+   * 
+   * Returns ApiResponse()
    */
 
   static async login(username, password) {
@@ -211,6 +215,56 @@ class User {
     } catch (err) {
       console.error('loginViaStoredCredentials failed', err);
       return null;
+    }
+  }
+
+  /**
+   * Adds a story to the currentUser's favorite list.
+   *  - story - Story to be favorited.
+   * 
+   * Returns ApiResponse()
+   */
+
+  async addFavorite(story) {
+    return await updateFavorite('POST', story.storyId);
+  }
+
+    /**
+   * Removes a story to the currentUser's favorite list.
+   *  - story - Story to be unfavorited.
+   * 
+   * Returns ApiResponse()
+   */
+
+  async removeFavorite(story) {
+    return await updateFavorite('DELETE', story.storyId);
+  }
+
+  /**
+   * Updates the favorite status of a story, and uses the returned response
+   * to ensure that this.favorites is up to date.
+   *  - method - "POST" or "DELETE", depending on if you are adding / removing a favorite.
+   *  - storyId - ID of the story to be updated.
+   * 
+   * Returns ApiResponse()
+   */
+
+  async updateFavorite(method, storyId) {
+    try {
+      const response = await axios({
+        url: `${BASE_URL}/users/${currentUser.username}/favorites/${storyId}`,
+        method,
+        data: { token: currentUser.loginToken },
+      });
+
+      // Set this.favorites to be equal to the updated favorites list.
+      this.favorites = response.data.user.favorites.map((fav) => new Story(fav));
+
+      // We aren't worried about the data, just that the operation is successful.
+      // Let's the Presentation know favorite was successfully updated.
+      return new ApiResponse(true);
+    } catch (e) {
+      return ApiResponse.parse(e);
     }
   }
 }
