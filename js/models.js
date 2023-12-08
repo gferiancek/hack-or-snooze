@@ -122,7 +122,7 @@ class User {
    * - username: a new username
    * - password: a new password
    * - name: the user's full name
-   * 
+   *
    * Returns ApiResponse()
    */
 
@@ -221,23 +221,23 @@ class User {
   /**
    * Adds a story to the currentUser's favorite list.
    *  - story - Story to be favorited.
-   * 
+   *
    * Returns ApiResponse()
    */
 
   async addFavorite(story) {
-    return await updateFavorite('POST', story.storyId);
+    return await this.updateFavorite('POST', story.storyId);
   }
 
-    /**
+  /**
    * Removes a story to the currentUser's favorite list.
    *  - story - Story to be unfavorited.
-   * 
+   *
    * Returns ApiResponse()
    */
 
   async removeFavorite(story) {
-    return await updateFavorite('DELETE', story.storyId);
+    return await this.updateFavorite('DELETE', story.storyId);
   }
 
   /**
@@ -245,7 +245,7 @@ class User {
    * to ensure that this.favorites is up to date.
    *  - method - "POST" or "DELETE", depending on if you are adding / removing a favorite.
    *  - storyId - ID of the story to be updated.
-   * 
+   *
    * Returns ApiResponse()
    */
 
@@ -258,14 +258,22 @@ class User {
       });
 
       // Set this.favorites to be equal to the updated favorites list.
-      this.favorites = response.data.user.favorites.map((fav) => new Story(fav));
+      this.favorites = response.data.user.favorites.map(
+        (fav) => new Story(fav)
+      );
 
       // We aren't worried about the data, just that the operation is successful.
-      // Let's the Presentation know favorite was successfully updated.
+      // Lets the Presentation know favorite was successfully updated.
       return new ApiResponse(true);
     } catch (e) {
       return ApiResponse.parse(e);
     }
+  }
+
+  /** Utility function to indicate whether or not a given story is on the user's favorites list. */
+
+  isFavorite(story) {
+    return this.favorites.some(({ storyId }) => storyId === story.storyId);
   }
 }
 

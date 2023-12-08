@@ -4,6 +4,7 @@
 
 const $body = $('body');
 
+const $storiesContainer = $('.stories-container');
 const $storiesLoadingMsg = $('#stories-loading-msg');
 const $allStoriesList = $('#all-stories-list');
 const $ownStoriesList = $('#own-stories-list');
