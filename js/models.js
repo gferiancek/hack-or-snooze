@@ -68,7 +68,7 @@ class StoryList {
    * - user - the current instance of User who will post the story
    * - obj of {author, title, url}
    *
-   * Returns the ApiResponse().
+   * Returns the ApiResponse(), where data = created Story.
    */
 
   async addStory(user, { author, title, url }) {
@@ -85,6 +85,32 @@ class StoryList {
       currentUser.ownStories.unshift(story);
 
       return new ApiResponse(story);
+    } catch (e) {
+      return ApiResponse.parse(e);
+    }
+  }
+
+  /**
+   * Removes story from API, and updates our own data to reflect the changes.
+   *  - storyId - Id for story to be deleted.
+   * 
+   * Returns ApiResponse(), where data = deleted storyId.
+   */
+
+  async deleteStory(storyId) {
+    try {
+      const response = await axios({
+        url: `${BASE_URL}/stories/${storyId}`,
+        method: 'DELETE',
+        data: { token: currentUser.loginToken },
+      });
+
+      // Get storyId of deleted story from Response and update our data.
+      const deletedId = response.data.story.storyId;
+      this.stories.filter(({ storyId }) => storyId !== deletedId);
+      currentUser.ownStories.filter(({ storyId }) => storyId !== deletedId);
+
+      return new ApiResponse(deletedId);
     } catch (e) {
       return ApiResponse.parse(e);
     }
@@ -123,7 +149,7 @@ class User {
    * - password: a new password
    * - name: the user's full name
    *
-   * Returns ApiResponse()
+   * Returns ApiResponse(), where data = created User.
    */
 
   static async signup(username, password, name) {
@@ -158,7 +184,7 @@ class User {
    * - username: an existing user's username
    * - password: an existing user's password
    * 
-   * Returns ApiResponse()
+   * Returns ApiResponse(), where data = logged in User.
    */
 
   static async login(username, password) {
@@ -222,7 +248,7 @@ class User {
    * Adds a story to the currentUser's favorite list.
    *  - story - Story to be favorited.
    *
-   * Returns ApiResponse()
+   * Returns ApiResponse(), where data = true, indicating successful update.
    */
 
   async addFavorite(story) {
@@ -233,7 +259,7 @@ class User {
    * Removes a story to the currentUser's favorite list.
    *  - story - Story to be unfavorited.
    *
-   * Returns ApiResponse()
+   * Returns ApiResponse(), where data = true, indicating successful update.
    */
 
   async removeFavorite(story) {
@@ -246,7 +272,7 @@ class User {
    *  - method - "POST" or "DELETE", depending on if you are adding / removing a favorite.
    *  - storyId - ID of the story to be updated.
    *
-   * Returns ApiResponse()
+   * Returns ApiResponse(),where data = true, indicating successful update.
    */
 
   async updateFavorite(method, storyId) {
