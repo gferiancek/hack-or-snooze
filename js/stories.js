@@ -24,9 +24,15 @@ function putStoriesOnPage() {
   $allStoriesList.empty();
 
   // loop through all of our stories and generate HTML for them
-  for (let story of storyList.stories) {
-    const $story = generateStoryMarkup(story);
-    $allStoriesList.append($story);
+  if (storyList.stories.length === 0) {
+    $allStoriesList.append(
+      generateEmptyMarkup('No stories found, try again later.')
+    );
+  } else {
+    for (let story of storyList.stories) {
+      const $story = generateStoryMarkup(story);
+      $allStoriesList.append($story);
+    }
   }
 
   $allStoriesList.show();
@@ -78,6 +84,21 @@ function getFavoriteIcon(user, story) {
 function getDeleteIcon(user, story) {
   const showDeleteIcon = user.isOwn(story);
   return showDeleteIcon ? `<i class="fas fa-trash-alt"></i>` : '';
+}
+
+/** A render method to render HTML when there are no stories to show.
+ *  - message - Text to be displayed on empty state screen.
+ * 
+ * Returns the markup for Empty State.
+ */
+
+function generateEmptyMarkup(message) {
+  return $(`
+    <div class="empty-container">
+      <i class="fas fa-newspaper"></i>
+      <p class="empty">${message}</p>
+    </div>
+  `);
 }
 
 /************************************************************************************
@@ -143,10 +164,18 @@ $storiesContainer.on('click', '.fa-trash-alt', onDeleteStory);
 function putOwnStoriesOnPage() {
   $ownStoriesList.empty();
 
-  // Loop through own stories and generate HTML for them.
-  for (let story of currentUser.ownStories) {
-    const $story = generateStoryMarkup(story);
-    $ownStoriesList.append($story);
+  if (currentUser.ownStories.length === 0) {
+    $ownStoriesList.append(
+      generateEmptyMarkup(
+        "You don't have any stories. Try adding one with the submit button."
+      )
+    );
+  } else {
+    // Loop through own stories and generate HTML for them.
+    for (let story of currentUser.ownStories) {
+      const $story = generateStoryMarkup(story);
+      $ownStoriesList.append($story);
+    }
   }
 
   $ownStoriesList.show();
@@ -189,9 +218,17 @@ $storiesContainer.on('click', '.fa-star', onToggleFavorite);
 function putFavoriteStoriesOnPage() {
   $favStoriesList.empty();
 
-  for (let story of currentUser.favorites) {
-    const $story = generateStoryMarkup(story);
-    $favStoriesList.append($story);
+  if (currentUser.favorites.length === 0) {
+    $favStoriesList.append(
+      generateEmptyMarkup(
+        `You have no favorites. Click the start next to a story to favorite it.`
+      )
+    );
+  } else {
+    for (let story of currentUser.favorites) {
+      const $story = generateStoryMarkup(story);
+      $favStoriesList.append($story);
+    }
   }
 
   $favStoriesList.show();
