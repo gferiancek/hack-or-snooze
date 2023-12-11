@@ -23,8 +23,8 @@ class Story {
   /** Parses hostname out of URL and returns it. */
 
   getHostName() {
-    // UNIMPLEMENTED: complete this function!
-    return 'hostname.com';
+    const url = new URL(this.url);
+    return url.hostname;
   }
 }
 
@@ -54,7 +54,7 @@ class StoryList {
 
       // query the /stories endpoint (no auth required)
       const response = await axios({
-        url: `${BASE_URL}/stores`,
+        url: `${BASE_URL}/stories`,
         method: 'GET',
       });
 

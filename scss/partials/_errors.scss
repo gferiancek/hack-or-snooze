@@ -1,0 +1,10 @@
+.alert-error {
+  padding: 1em;
+  background-color: hsl(0, 50%, 50%);
+  color: white;
+  width: fit-content;
+
+  i {
+    margin-right: 1rem;
+  }
+}
