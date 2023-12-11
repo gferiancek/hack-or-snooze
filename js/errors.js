@@ -16,7 +16,9 @@ function prependError($element, error) {
 
   const $error = generateErrorComponent(error.message);
   $currentError = $error;
+  $error.hide();
   $element.prepend($error);
+  $error.slideDown().show();
 }
 
 /**

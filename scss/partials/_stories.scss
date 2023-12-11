@@ -1,0 +1,68 @@
+/* Lists of stories */
+
+.stories-list {
+  padding: 1em 2em;
+
+  #favorite-stories-list,
+  #own-stories-list {
+    list-style: none;
+  }
+
+  /* Individual stories */
+
+  li {
+    color: gray;
+    font-size: 0.8rem;
+    margin: 10px 0;
+    border-bottom: 1px solid lightgrey;
+    padding-bottom: 1em;
+
+    .fa-star,
+    .fa-trash-alt {
+      margin: 0.25em;
+    }
+
+    .story-link {
+      color: black;
+      font-size: 0.85rem;
+      font-weight: normal;
+      margin-right: 1em;
+    }
+
+    .story-link:hover {
+      text-decoration: none;
+    }
+
+    .story-author {
+      margin-left: 2em;
+      color: green;
+    }
+
+    .story-user {
+      margin-left: 2em;
+      color: orange;
+    }
+  }
+
+  /* Empty State */
+
+  .empty-container {
+    text-align: center;
+    color: slategrey;
+
+    .fa-newspaper {
+      font-size: 10rem;
+    }
+
+    .empty {
+      font-size: 0.75rem;
+    }
+  }
+}
+
+
+#stories-loading-msg {
+  font-weight: bold;
+  font-size: 150%;
+  margin: 2em;
+}

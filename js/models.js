@@ -23,8 +23,8 @@ class Story {
   /** Parses hostname out of URL and returns it. */
 
   getHostName() {
-    // UNIMPLEMENTED: complete this function!
-    return 'hostname.com';
+    const url = new URL(this.url);
+    return url.hostname;
   }
 }
 
@@ -46,22 +46,31 @@ class StoryList {
    */
 
   static async getStories() {
-    // Note presence of `static` keyword: this indicates that getStories is
-    //  **not** an instance method. Rather, it is a method that is called on the
-    //  class directly. Why doesn't it make sense for getStories to be an
-    //  instance method?
+    try {
+      // Note presence of `static` keyword: this indicates that getStories is
+      //  **not** an instance method. Rather, it is a method that is called on the
+      //  class directly. Why doesn't it make sense for getStories to be an
+      //  instance method?
 
-    // query the /stories endpoint (no auth required)
-    const response = await axios({
-      url: `${BASE_URL}/stories`,
-      method: 'GET',
-    });
+      // query the /stories endpoint (no auth required)
+      const response = await axios({
+        url: `${BASE_URL}/stories`,
+        method: 'GET',
+      });
 
-    // turn plain old story objects from API into instances of Story class
-    const stories = response.data.stories.map((story) => new Story(story));
+      // turn plain old story objects from API into instances of Story class
+      const stories = response.data.stories.map((story) => new Story(story));
 
-    // build an instance of our own class using the new array of stories
-    return new StoryList(stories);
+      // build an instance of our own class using the new array of stories
+      return new StoryList(stories);
+    } catch (e) {
+      // If not an API error, throw to avoid masking issues.
+      if (!e.isAxiosError) {
+        throw e;
+      }
+      // Return StoryList with empty list to display empty state.
+      return new StoryList([]);
+    }
   }
 
   /** Adds story data to API, makes a Story instance, adds it to story list.
