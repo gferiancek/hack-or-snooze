@@ -1,7 +1,7 @@
 /* Lists of stories */
 
 .stories-list {
-  padding: 1em 2em;
+  padding: 0 2em;
 
   #favorite-stories-list,
   #own-stories-list {
@@ -25,8 +25,8 @@
     .story-link {
       color: black;
       font-size: 0.85rem;
-      font-weight: normal;
-      margin-right: 1em;
+      font-weight: bold;
+      margin-right: 0.25em;
     }
 
     .story-link:hover {
