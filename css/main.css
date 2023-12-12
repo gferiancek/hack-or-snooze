@@ -170,6 +170,7 @@ form > hr {
 .stories-list li .fa-star,
 .stories-list li .fa-trash-alt {
   margin: 0.25em;
+  cursor: pointer;
 }
 .stories-list li .story-link {
   color: black;

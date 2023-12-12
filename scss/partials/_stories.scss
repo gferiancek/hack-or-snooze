@@ -20,6 +20,7 @@
     .fa-star,
     .fa-trash-alt {
       margin: 0.25em;
+      cursor: pointer;
     }
 
     .story-link {
@@ -59,7 +60,6 @@
     }
   }
 }
-
 
 #stories-loading-msg {
   font-weight: bold;
