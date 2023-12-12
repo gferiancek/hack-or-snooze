@@ -88,7 +88,7 @@ function getDeleteIcon(user, story) {
 
 /** A render method to render HTML when there are no stories to show.
  *  - message - Text to be displayed on empty state screen.
- * 
+ *
  * Returns the markup for Empty State.
  */
 
