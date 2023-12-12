@@ -10,22 +10,18 @@ nav {
     border-radius: 3px 3px 0 0;
   }
 }
-
-.navbar-brand {
+nav .navbar-brand {
   font-weight: bold;
 }
-
-.nav-link {
+nav .nav-link {
   font-size: 0.85rem;
   margin: 0 3px;
 }
-
-.main-nav-links .nav-link::before {
+nav .main-nav-links .nav-link::before {
   content: "|";
   margin-right: 0.5em;
 }
-
-.nav-right {
+nav .nav-right {
   margin-left: auto;
   text-align: right;
 }
@@ -34,10 +30,10 @@ nav {
 * {
   padding: 0;
   margin: 0;
+  box-sizing: border-box;
 }
 
 body {
-  height: 100svh;
   font-family: Arimo, sans-serif;
   margin: 0;
   background-color: #f6f6ef;
@@ -45,15 +41,15 @@ body {
 @media only screen and (min-width: 576px) {
   body {
     margin: 8px 7.5vw;
+    background: radial-gradient(circle, rgb(238, 174, 202) 0%, rgb(238, 174, 202) 50%, rgb(148, 187, 233) 100%);
+    background-repeat: no-repeat;
+    background-size: cover;
   }
 }
 @media only screen and (min-width: 996px) {
   body {
     max-width: 900px;
     margin: 8px auto;
-    background: radial-gradient(circle, rgb(238, 174, 202) 0%, rgb(238, 174, 202) 50%, rgb(148, 187, 233) 100%);
-    background-repeat: no-repeat;
-    background-size: cover;
   }
 }
 
@@ -156,7 +152,7 @@ form > hr {
 
 /* Lists of stories */
 .stories-list {
-  padding: 1em 2em;
+  padding: 0 2em;
   /* Individual stories */
   /* Empty State */
 }
@@ -174,12 +170,13 @@ form > hr {
 .stories-list li .fa-star,
 .stories-list li .fa-trash-alt {
   margin: 0.25em;
+  cursor: pointer;
 }
 .stories-list li .story-link {
   color: black;
   font-size: 0.85rem;
-  font-weight: normal;
-  margin-right: 1em;
+  font-weight: bold;
+  margin-right: 0.25em;
 }
 .stories-list li .story-link:hover {
   text-decoration: none;

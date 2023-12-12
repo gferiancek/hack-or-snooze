@@ -10,23 +10,23 @@ nav {
   @include breakpoints.mq('medium') {
     border-radius: 3px 3px 0 0;
   }
-}
 
-.navbar-brand {
-  font-weight: bold;
-}
+  .navbar-brand {
+    font-weight: bold;
+  }
 
-.nav-link {
-  font-size: 0.85rem;
-  margin: 0 3px;
-}
+  .nav-link {
+    font-size: 0.85rem;
+    margin: 0 3px;
+  }
 
-.main-nav-links .nav-link::before {
-  content: '|';
-  margin-right: 0.5em;
-}
+  .main-nav-links .nav-link::before {
+    content: '|';
+    margin-right: 0.5em;
+  }
 
-.nav-right {
-  margin-left: auto;
-  text-align: right;
+  .nav-right {
+    margin-left: auto;
+    text-align: right;
+  }
 }

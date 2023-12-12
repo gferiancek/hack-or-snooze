@@ -4,21 +4,16 @@
 * {
   padding: 0;
   margin: 0;
+  box-sizing: border-box;
 }
 
 body {
-  height: 100svh;
   font-family: Arimo, sans-serif;
   margin: 0;
   background-color: #f6f6ef;
 
   @include breakpoints.mq('medium') {
     margin: 8px 7.5vw;
-  }
-
-  @include breakpoints.mq('large') {
-    max-width: 900px;
-    margin: 8px auto;
     background: radial-gradient(
       circle,
       rgba(238, 174, 202, 1) 0%,
@@ -27,6 +22,11 @@ body {
     );
     background-repeat: no-repeat;
     background-size: cover;
+  }
+
+  @include breakpoints.mq('large') {
+    max-width: 900px;
+    margin: 8px auto;
   }
 }
 
